@@ -75,15 +75,13 @@ var checkForClones = function() {
             continue;
         // if(updates_checked[id])
         //     continue;
+        updates_checked[id] = true;
 
         var person = findFirstLink(div);
         if(hide[person]) {
             div.parentNode.removeChild(div);
             --i;
-        }
-        updates_checked[id] = true;
-        
-        if(!item_added[id]) {
+        } else if(!item_added[id]) {
             var items = findMenuItems(div);
             for(var j = 0; j < items.length; ++j) {
                 var item = items[j];
@@ -95,22 +93,26 @@ var checkForClones = function() {
                 limited.textContent = "Hide in this stream";
                 var end = item.childNodes[item.childNodes.length - 1].nextSibling;
                 item.parentNode.insertBefore(limited, item.nextSibling);
+                var update_data = {
+                    menu_node:limited,
+                    person_id:person
+                };
                 limited.addEventListener("click", function() { 
                     if(!confirm("Are you sure you want to hide this poster in this stream?"))
                         return;
-                    hide[person] = true; 
+                    hide[this.person_id] = true; 
                     //save the hiding
                     window.localStorage.setItem("hidden:" + window.location, JSON.stringify(hide));
                     //need to recheck
                     updates_checked = {};
                     return true;
-                });
+                }.bind(update_data));
                 limited.addEventListener("mouseover", function() { 
-                    limited.setAttribute("style", "padding: 10px 7em 6px 22px; background-color:#a0a0a0");
-                });
+                    this.menu_node.setAttribute("style", "padding: 10px 7em 6px 22px; background-color:#a0a0a0");
+                }.bind(update_data));
                 limited.addEventListener("mouseout", function() { 
-                    limited.setAttribute("style", "padding: 10px 7em 6px 22px;");
-                });
+                    this.menu_node.setAttribute("style", "padding: 10px 7em 6px 22px;");
+                }.bind(update_data));
             } 
             item_added[id] = true;
         }

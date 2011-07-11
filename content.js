@@ -43,7 +43,7 @@ var checkForClones = function() {
         
         var links = document.documentElement.getElementsByTagName("a");
         for(var i = 0; i < links.length; ++i) {
-            if(links[i].textContent.toLowerCase().startsWith("view and edit")) {
+            if(links[i].textContent.toLowerCase().startsWith("view a")) {
                 //we already did it but they flipped the app state without reloading the page
                 if(links.length > i + 1 && links[i + 1].textContent.toLowerCase() == "unhide all")
                     break;
